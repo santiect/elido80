@@ -1,0 +1,12 @@
+﻿editadas/
+fotos/
+projeto_estilo_igreja_claro/
+__pycache__/
+*.pyc
+
+# Local tooling
+.venv/
+venv/
+
+# Keep deploy assets
+# publish_images/ is intentionally tracked

@@ -1,0 +1,87 @@
+﻿<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Elido 80 Anos | Álbum de Fotos</title>
+  <meta name="description" content="Álbum do aniversário de 80 anos do Elido." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;700&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div id="intro" class="intro" aria-hidden="true">
+    <div class="intro-loading" id="introLoading">
+      <p class="intro-loading-label">Carregando miniaturas...</p>
+      <div class="intro-progress" aria-hidden="true">
+        <span id="introProgressFill"></span>
+      </div>
+      <p class="intro-loading-meta"><span id="introProgressText">0%</span></p>
+    </div>
+    <div id="introCollage" class="intro-collage"></div>
+    <div class="intro-text">
+      <p>80 anos de memórias</p>
+      <h2>Elido</h2>
+    </div>
+  </div>
+
+  <div class="bg-glow bg-glow-a" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow-b" aria-hidden="true"></div>
+
+  <header class="hero">
+    <p class="kicker">Celebração em família</p>
+    <h1>80 anos do Elido</h1>
+    <p class="lead">Uma vida inteira de histórias, afeto e encontros inesquecíveis. Este álbum reúne os momentos do aniversário de 80 anos do nosso querido Elido.</p>
+    <a class="hero-cta" href="#galeria">Ver fotos</a>
+  </header>
+
+  <main>
+    <section class="stats" aria-label="Resumo do álbum">
+      <article>
+        <strong id="photoCount">0</strong>
+        <span>Fotos editadas</span>
+      </article>
+      <article>
+        <strong>1 dia</strong>
+        <span>De celebração</span>
+      </article>
+      <article>
+        <strong>80 anos</strong>
+        <span>De história</span>
+      </article>
+    </section>
+
+    <section class="highlights" id="destaques">
+      <div class="section-head">
+        <p class="kicker">Destaques</p>
+        <h2>Momentos especiais</h2>
+      </div>
+      <div class="highlight-strip" id="highlightStrip"></div>
+    </section>
+
+    <section class="gallery" id="galeria">
+      <div class="section-head">
+        <p class="kicker">Álbum completo</p>
+        <h2>Linha do tempo da festa</h2>
+      </div>
+      <div id="chapters" class="chapters"></div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Feito com carinho para celebrar o aniversário de 80 anos do Elido.</p>
+  </footer>
+
+  <dialog id="lightbox" class="lightbox" aria-label="Visualização ampliada da foto">
+    <button id="closeLightbox" class="lightbox-close" aria-label="Fechar">&times;</button>
+    <button id="prevPhoto" class="lightbox-nav" data-dir="-1" aria-label="Foto anterior">&lsaquo;</button>
+    <img id="lightboxImage" alt="Foto do aniversário do Elido" />
+    <button id="nextPhoto" class="lightbox-nav" data-dir="1" aria-label="Próxima foto">&rsaquo;</button>
+    <p id="lightboxCaption"></p>
+  </dialog>
+
+  <script src="photos.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
