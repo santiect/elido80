@@ -20,10 +20,34 @@ const intro = document.getElementById('intro');
 const introCollage = document.getElementById('introCollage');
 const introProgressFill = document.getElementById('introProgressFill');
 const introProgressText = document.getElementById('introProgressText');
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 let currentIndex = 0;
 
-countElement.textContent = totalPhotos.toLocaleString('pt-BR');
+countElement.textContent = '0';
+
+function animateCount(targetElement, targetValue, durationMs = 1400) {
+  if (!targetElement) {
+    return;
+  }
+
+  if (prefersReducedMotion) {
+    targetElement.textContent = targetValue.toLocaleString('pt-BR');
+    return;
+  }
+
+  const start = performance.now();
+  const step = (now) => {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / durationMs, 1);
+    const eased = 1 - (1 - progress) ** 3;
+    targetElement.textContent = Math.round(targetValue * eased).toLocaleString('pt-BR');
+    if (progress < 1) {
+      requestAnimationFrame(step);
+    }
+  };
+  requestAnimationFrame(step);
+}
 
 function getThumbPath(fullPath) {
   if (fullPath.startsWith('publish_images/full/')) {
@@ -132,8 +156,44 @@ async function startIntroAnimation() {
 }
 
 function setupRevealAnimations() {
-  const cards = document.querySelectorAll('.gallery-item');
+  const cards = document.querySelectorAll('.gallery-item, .highlight-card');
   if (!cards.length) {
+    return;
+  }
+
+  if (prefersReducedMotion) {
+    cards.forEach((card) => card.classList.add('is-visible'));
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) {
+          return;
+        }
+        const order = Number(entry.target.dataset.revealOrder || 0);
+        entry.target.style.transitionDelay = `${(order % 8) * 38}ms`;
+        entry.target.classList.add('is-visible');
+        obs.unobserve(entry.target);
+      });
+    },
+    { rootMargin: '0px 0px -10% 0px', threshold: 0.08 }
+  );
+
+  cards.forEach((card) => observer.observe(card));
+}
+
+function setupSectionReveal() {
+  const blocks = document.querySelectorAll('.stats, .highlights, .video-feature, .gallery, .chapter, footer');
+  if (!blocks.length) {
+    return;
+  }
+
+  blocks.forEach((block) => block.setAttribute('data-reveal', ''));
+
+  if (prefersReducedMotion) {
+    blocks.forEach((block) => block.classList.add('is-visible'));
     return;
   }
 
@@ -147,10 +207,10 @@ function setupRevealAnimations() {
         obs.unobserve(entry.target);
       });
     },
-    { rootMargin: '0px 0px -10% 0px', threshold: 0.08 }
+    { rootMargin: '0px 0px -8% 0px', threshold: 0.12 }
   );
 
-  cards.forEach((card) => observer.observe(card));
+  blocks.forEach((block) => observer.observe(block));
 }
 
 function buttonForPhoto(src, index, className = 'gallery-item') {
@@ -179,8 +239,10 @@ function buttonForPhoto(src, index, className = 'gallery-item') {
 
 function renderHighlights() {
   const picks = [0, 1, 2, 3, 4, 5, 6, 7].filter((i) => i < totalPhotos);
-  picks.forEach((index) => {
-    highlightStrip.appendChild(buttonForPhoto(photos[index], index, 'highlight-card'));
+  picks.forEach((index, order) => {
+    const card = buttonForPhoto(photos[index], index, 'highlight-card');
+    card.dataset.revealOrder = String(order);
+    highlightStrip.appendChild(card);
   });
 }
 
@@ -212,7 +274,9 @@ function renderChapters() {
 
     chapterPhotos.forEach((src, offset) => {
       const index = start + offset;
-      masonry.appendChild(buttonForPhoto(src, index));
+      const card = buttonForPhoto(src, index);
+      card.dataset.revealOrder = String(offset);
+      masonry.appendChild(card);
     });
 
     section.append(heading, masonry);
@@ -261,6 +325,8 @@ document.addEventListener('keydown', (event) => {
 
 renderHighlights();
 renderChapters();
+setupSectionReveal();
 setupRevealAnimations();
+animateCount(countElement, totalPhotos);
 startIntroAnimation();
 
