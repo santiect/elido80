@@ -539,6 +539,15 @@ footer {
   .chapter h3 {
     font-size: 1.5rem;
   }
+
+  /* Fallback mobile: garante visibilidade mesmo se IntersectionObserver falhar */
+  [data-reveal],
+  .gallery-item,
+  .highlight-card {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 @keyframes intro-photo {
